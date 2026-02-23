@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Duman Casino</title>
+<style>
+body{
+  background:#0f0f0f;
+  color:white;
+  font-family:Arial;
+  text-align:center;
+}
+.box{
+  margin-top:40px;
+}
+input{
+  padding:10px;
+  margin:5px;
+  width:250px;
+}
+button{
+  padding:10px 20px;
+  background:#00ff88;
+  border:none;
+  cursor:pointer;
+  margin:5px;
+  font-weight:bold;
+}
+#panel{
+  display:none;
+}
+iframe{
+  margin-top:20px;
+  width:100%;
+  height:600px;
+  border:none;
+}
+.balance{
+  font-size:20px;
+  margin:15px;
+  color:#00ff88;
+}
+</style>
+</head>
+<body>
+
+<h1>🔥 Duman Casino 🔥</h1>
+
+<div id="auth" class="box">
+  <h2>Kayıt Ol</h2>
+  <input type="text" id="username" placeholder="Kullanıcı Adı"><br>
+  <input type="email" id="regEmail" placeholder="Email"><br>
+  <input type="password" id="regPass" placeholder="Şifre"><br>
+  <button onclick="register()">Kayıt Ol</button>
+
+  <h2>Giriş Yap</h2>
+  <input type="email" id="logEmail" placeholder="Email"><br>
+  <input type="password" id="logPass" placeholder="Şifre"><br>
+  <button onclick="login()">Giriş Yap</button>
+</div>
+
+<div id="panel">
+  <h2 id="welcome"></h2>
+  <div class="balance">Bakiye: <span id="balance">0</span> ₺</div>
+  <button onclick="logout()">Çıkış Yap</button>
+
+  <iframe src="https://softgamings12-gc-prod-bgsp.p4-pmmievrokhxky.com/?playerId=1627d_DemoUser&gameKey=FSHBLSlot&currencyCode=EUR&language=tr&mode=mobile&casinoId=187_SOFTGAMINGS12&demo=true"></iframe>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAcywJ4bT_BvFntA53S9e1iM3Facr12qUo",
+  authDomain: "duman-site.firebaseapp.com",
+  projectId: "duman-site",
+  storageBucket: "duman-site.firebasestorage.app",
+  messagingSenderId: "208426888053",
+  appId: "1:208426888053:web:df7f8c364bc66ffef8813c"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+window.register = async function(){
+  const username = document.getElementById("username").value;
+  const email = document.getElementById("regEmail").value;
+  const pass = document.getElementById("regPass").value;
+
+  const userCred = await createUserWithEmailAndPassword(auth, email, pass);
+  const user = userCred.user;
+
+  await setDoc(doc(db, "users", user.uid), {
+    username: username,
+    balance: 1000
+  });
+
+  alert("Kayıt başarılı! 1000₺ eklendi.");
+}
+
+window.login = function(){
+  const email = document.getElementById("logEmail").value;
+  const pass = document.getElementById("logPass").value;
+
+  signInWithEmailAndPassword(auth, email, pass)
+    .catch(error => alert(error.message));
+}
+
+window.logout = function(){
+  signOut(auth);
+}
+
+onAuthStateChanged(auth, async (user) => {
+  if(user){
+    document.getElementById("auth").style.display="none";
+    document.getElementById("panel").style.display="block";
+
+    const docSnap = await getDoc(doc(db,"users",user.uid));
+    if(docSnap.exists()){
+      document.getElementById("welcome").innerText =
+        "Hoşgeldin " + docSnap.data().username;
+      document.getElementById("balance").innerText =
+        docSnap.data().balance;
+    }
+  } else {
+    document.getElementById("auth").style.display="block";
+    document.getElementById("panel").style.display="none";
+  }
+});
+</script>
+
+</body>
+</html>
