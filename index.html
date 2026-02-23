@@ -1,10 +1,59 @@
+
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Duman05</title>
+<title>Duman05 Bet Demo</title>
+<style>
+body {
+  background: #111;
+  color: white;
+  text-align: center;
+  font-family: Arial;
+}
+.box {
+  background: #222;
+  padding: 20px;
+  margin: 20px auto;
+  width: 300px;
+  border-radius: 10px;
+}
+button {
+  padding: 10px 20px;
+  background: lime;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+</style>
 </head>
-<body style="background:black; color:lime; text-align:center; margin-top:100px;">
-  <h1>Duman05 Sitesine Hoşgeldiniz</h1>
-  <p>Bu site GitHub Pages ile ücretsiz yapıldı.</p>
+
+<body>
+
+<h1>🎰 Duman05 Bet Demo</h1>
+
+<div class="box">
+  <p>Bakiye: <span id="bakiye">1000</span> ₺</p>
+  <button onclick="oyna()">Bahis Oyna</button>
+  <p id="sonuc"></p>
+</div>
+
+<script>
+let bakiye = 1000;
+
+function oyna() {
+  let kazanma = Math.random();
+  
+  if (kazanma > 0.5) {
+    bakiye += 100;
+    document.getElementById("sonuc").innerText = "Kazandın +100₺ 🎉";
+  } else {
+    bakiye -= 100;
+    document.getElementById("sonuc").innerText = "Kaybettin -100₺ 😢";
+  }
+
+  document.getElementById("bakiye").innerText = bakiye;
+}
+</script>
+
 </body>
 </html>
