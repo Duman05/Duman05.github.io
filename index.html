@@ -1,0 +1,28 @@
+import express from "express";
+import fetch from "node-fetch";
+import cors from "cors";
+
+const app = express();
+app.use(cors());
+
+const NASA_KEY = "NASA_API_KEYİNİ_YAZ";
+
+app.get("/iss", async (req,res)=>{
+    const r = await fetch("https://api.wheretheiss.at/v1/satellites/25544");
+    res.json(await r.json());
+});
+
+app.get("/apod", async (req,res)=>{
+    const r = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${NASA_KEY}`);
+    res.json(await r.json());
+});
+
+app.get("/asteroids", async (req,res)=>{
+    const today = new Date().toISOString().split("T")[0];
+    const r = await fetch(
+      `https://api.nasa.gov/neo/rest/v1/feed?start_date=${today}&end_date=${today}&api_key=${NASA_KEY}`
+    );
+    res.json(await r.json());
+});
+
+app.listen(3000, ()=>console.log("Space Server Running 🚀"));
